@@ -7,6 +7,23 @@
 - https://4ppt.vercel.app/
 - https://guizang-four-up-generator.vercel.app/
 
+## 界面预览
+
+<table>
+  <tr>
+    <td width="50%">
+      <img src="docs/images/four-up-ppt-light-theme.png" alt="Four-up PPT Generator light theme preview" />
+    </td>
+    <td width="50%">
+      <img src="docs/images/four-up-ppt-dark-theme.png" alt="Four-up PPT Generator dark theme preview" />
+    </td>
+  </tr>
+  <tr>
+    <td align="center">Light theme</td>
+    <td align="center">Dark theme</td>
+  </tr>
+</table>
+
 源码仓库：
 
 - https://github.com/woniuniuniu/four-up-ppt-generator

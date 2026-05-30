@@ -1,9 +1,14 @@
-本项目基于歸藏老师开源的 PPT Skill 构建。
+# Notice and Attribution
 
-原项目：
+This project is an independent derivative web application built on top of the open-source work in `op7418/guizang-ppt-skill`.
 
-- https://github.com/op7418/guizang-ppt-skill
-- 作者：op7418 / 歸藏
-- 原项目当前许可证：AGPL-3.0
+Upstream project:
 
-本项目属于在原项目能力、模板和提示词体系基础上的四宫格 PPT 生成应用改造。正式公开发布源码时，请保留本致谢、原项目链接、许可证说明，并按 AGPL-3.0 要求提供完整对应源码。
+- Repository: https://github.com/op7418/guizang-ppt-skill
+- Author: op7418 / 歸藏
+- License: AGPL-3.0
+- Upstream snapshot included in this repository: `014c572454065e905477a7432ae331dfc0fe6070`
+
+The upstream project provides the core PPT Skill concept, HTML deck templates, visual systems, layout references, theme guidance, and quality checklist that made this project possible.
+
+This repository keeps a copy of the upstream project under `upstream-guizang-ppt-skill/` for attribution, traceability, and license compliance. This project is not an official release of the upstream project. If any attribution, wording, or compliance detail can be improved, corrections are welcome and will be prioritized.

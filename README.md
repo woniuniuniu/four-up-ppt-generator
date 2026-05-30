@@ -1,5 +1,7 @@
 # Four-up PPT Generator / 饱和式 PPT 生成器
 
+语言：简体中文 | [English](README.en.md)
+
 一个面向中文演示场景的四宫格 HTML PPT 生成器。输入一个主题后，系统会并行生成 A/B/C/D 四份不同内容视角、不同视觉风格的网页 PPT，并在生成过程中逐页同步预览。
 
 在线体验：

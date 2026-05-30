@@ -40,7 +40,7 @@
 - 作者：op7418 / 歸藏
 - 原项目许可证：AGPL-3.0
 
-本仓库保留了原项目链接、许可证说明和原项目当前主分支快照 `upstream-guizang-ppt-skill/`，用于明确来源、便于追溯，并向原作者的开源工作表示感谢。本项目不是原项目的官方版本，如有署名、说明或合规处理不妥之处，欢迎指出，我会优先修正。
+本仓库保留了原项目链接、许可证说明和原项目当前主分支快照 `vendor/guizang-ppt-skill/`，用于明确来源、便于追溯，并向原作者的开源工作表示感谢。本项目不是原项目的官方版本，如有署名、说明或合规处理不妥之处，欢迎指出，我会优先修正。
 
 ## 功能
 
@@ -106,7 +106,7 @@ http://localhost:5177/
 api/                         Vercel serverless API
 lib/                         生成、渲染、模型请求和流式同步逻辑
 public/                      前端页面、样式和预览交互
-upstream-guizang-ppt-skill/  原项目当前主分支快照
+vendor/guizang-ppt-skill/        原项目当前主分支快照
 NOTICE.md                    来源与致谢说明
 LICENSE                      AGPL-3.0 许可证
 ```

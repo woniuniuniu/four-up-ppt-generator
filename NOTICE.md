@@ -11,4 +11,4 @@ Upstream project:
 
 The upstream project provides the core PPT Skill concept, HTML deck templates, visual systems, layout references, theme guidance, and quality checklist that made this project possible.
 
-This repository keeps a copy of the upstream project under `upstream-guizang-ppt-skill/` for attribution, traceability, and license compliance. This project is not an official release of the upstream project. If any attribution, wording, or compliance detail can be improved, corrections are welcome and will be prioritized.
+This repository keeps a copy of the upstream project under `vendor/guizang-ppt-skill/` for attribution, traceability, and license compliance. This project is not an official release of the upstream project. If any attribution, wording, or compliance detail can be improved, corrections are welcome and will be prioritized.

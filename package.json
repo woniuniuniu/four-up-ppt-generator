@@ -1,10 +1,25 @@
 {
   "name": "four-up-ppt-generator",
   "version": "0.1.0",
+  "description": "A four-up HTML PPT generator based on op7418/guizang-ppt-skill.",
   "license": "AGPL-3.0-only",
+  "homepage": "https://4ppt.vercel.app",
   "repository": {
     "type": "git",
     "url": "https://github.com/woniuniuniu/four-up-ppt-generator.git"
+  },
+  "bugs": {
+    "url": "https://github.com/woniuniuniu/four-up-ppt-generator/issues"
+  },
+  "keywords": [
+    "ppt",
+    "presentation",
+    "html-presentation",
+    "ai",
+    "stepfun"
+  ],
+  "engines": {
+    "node": ">=18"
   },
   "type": "module",
   "scripts": {

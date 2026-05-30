@@ -1,5 +1,5 @@
 .env
 generated
 node_modules
-upstream-guizang-ppt-skill/.git
+vendor/guizang-ppt-skill/.git
 .DS_Store

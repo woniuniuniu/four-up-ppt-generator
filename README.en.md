@@ -40,7 +40,7 @@ Please read and support the upstream project first:
 - Author: op7418 / 歸藏
 - Upstream license: AGPL-3.0
 
-This repository keeps the upstream link, license notice, and a snapshot of the upstream main branch under `upstream-guizang-ppt-skill/` for attribution, traceability, and license compliance. This is an independent derivative project, not an official release of the upstream project. If any attribution, wording, or compliance detail can be improved, corrections are welcome and will be prioritized.
+This repository keeps the upstream link, license notice, and a snapshot of the upstream main branch under `vendor/guizang-ppt-skill/` for attribution, traceability, and license compliance. This is an independent derivative project, not an official release of the upstream project. If any attribution, wording, or compliance detail can be improved, corrections are welcome and will be prioritized.
 
 ## Features
 
@@ -106,7 +106,7 @@ When deploying to Vercel, non-secret defaults are optional. Configure `STEPFUN_A
 api/                         Vercel serverless API
 lib/                         generation, rendering, model calls, and streaming sync
 public/                      frontend page, styles, and preview interaction
-upstream-guizang-ppt-skill/  snapshot of the upstream main branch
+vendor/guizang-ppt-skill/        snapshot of the upstream main branch
 NOTICE.md                    attribution and source notice
 LICENSE                      AGPL-3.0 license
 ```

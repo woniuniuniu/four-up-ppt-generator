@@ -1,108 +1,99 @@
-# 饱和式 PPT 生成器
+# Four-up PPT Generator / 饱和式 PPT 生成器
 
-四宫格 PPT 生成器：输入一个 PPT 想法后，同时生成 A/B/C/D 四份差异化 HTML PPT。
+一个面向中文演示场景的四宫格 HTML PPT 生成器。输入一个主题后，系统会并行生成 A/B/C/D 四份不同内容视角、不同视觉风格的网页 PPT，并在生成过程中逐页同步预览。
 
-线上地址：
+在线体验：
 
-- https://guizang-four-up-generator.vercel.app/
 - https://4ppt.vercel.app/
+- https://guizang-four-up-generator.vercel.app/
 
-本项目源码：
+源码仓库：
 
 - https://github.com/woniuniuniu/four-up-ppt-generator
 
-开源来源：
+## 致谢与来源
 
-- 基于歸藏老师开源的 PPT Skill 构建
-- 原始仓库：https://github.com/op7418/guizang-ppt-skill
-- 原项目当前许可证为 AGPL-3.0
-- 本项目保留了公开致谢和仓库链接，正式开源时也应使用 AGPL-3.0 并公开完整对应源码
+本项目基于 [op7418/guizang-ppt-skill](https://github.com/op7418/guizang-ppt-skill) 构建。这个原项目由 op7418 / 歸藏老师开源，提供了面向 AI Agent 的 HTML PPT 生成 Skill、演示模板、视觉主题、版式规则和设计参考，是本项目最重要的基础。
 
-## 开源与密钥说明
+如果你对这个项目感兴趣，请优先阅读、使用和支持原项目：
 
-本项目分为两种使用方式：
+- 原项目：<https://github.com/op7418/guizang-ppt-skill>
+- 作者：op7418 / 歸藏
+- 原项目许可证：AGPL-3.0
 
-- 托管演示版：站长可以在自己的 Vercel 项目里配置模型 API Key，让访问者打开网页即可体验。
-- 开源/自部署版：仓库不包含任何真实 API Key；没有服务端密钥时，页面会要求使用者填写模型名称、Base URL 和 API Key。
+本仓库保留了原项目链接、许可证说明和本地来源副本 `upstream-guizang-ppt-skill/`，用于明确来源、便于追溯，并向原作者的开源工作表示感谢。本项目不是原项目的官方版本，如有署名、说明或合规处理不妥之处，欢迎指出，我会优先修正。
 
-不要把 `.env`、`.vercel`、API Key、账号密码或任何私密部署配置提交到公开仓库。
+## 功能
 
-## 当前项目状态
+- 四路并行生成：A/B/C/D 四份 PPT 独立请求模型，避免“一套内容换四个皮肤”。
+- 逐页实时预览：模型输出到哪一页，页面就同步展示到哪一页。
+- 差异化叙事：商务汇报、产品展示、内部 briefing、叙事演讲四种方向。
+- HTML PPT：保留 PPT 内部脚本、动画、WebGL 和交互能力。
+- 双主题界面：支持深色 / 浅色主题切换。
+- 双模式密钥策略：托管演示版可使用服务端环境变量；开源/自部署版可由用户在页面填写自己的模型配置。
 
-- Vercel 项目名：`guizang-four-up-generator`
-- 本地端口：`5177`
-- 默认模型：`step-3.7-flash`
-- 默认输入：`做一份介绍 Step 3.7 Flash 的产品`
-- 托管演示版：Vercel 环境变量里可以配置 `STEPFUN_API_KEY`，用户打开网页即可生成
-- 开源/自部署版：没有服务端密钥时，页面会要求用户填写模型名称、Base URL 和 API Key
-- 用户自填的 API Key 只随单次生成请求转发，不写入文件、数据库或仓库
-- 本地 `.env` 不要提交，尤其不能包含真实 API Key
-- `.vercel/project.json` 里保留了 Vercel 绑定信息；不要公开分享 `.vercel`
+## 模型配置
 
-## 本地运行
+默认目标模型是 Step 3.7 Flash，并按 OpenAI-compatible `chat/completions` 风格调用。项目主要围绕阶跃星辰接口做适配；其他兼容接口理论上可以尝试，但不作为强保证。
+
+两种使用方式：
+
+- 托管演示版：部署者可以在 Vercel 环境变量中配置 API Key，让访问者打开网页即可体验。
+- 开源/自部署版：仓库不包含任何真实 API Key；如果没有服务端密钥，页面会要求使用者填写模型名称、Base URL 和 API Key。
+
+用户在页面里填写的 API Key 只随单次生成请求转发，不写入文件、数据库或仓库。请不要把 `.env`、`.vercel`、账号密码或任何真实 API Key 提交到公开仓库。
+
+## 开发与自部署
+
+环境要求：
+
+- Node.js 18+
+- 一个兼容的模型 API Key
+
+安装依赖：
 
 ```bash
 npm install
+```
+
+启动开发服务：
+
+```bash
 npm run dev
 ```
 
-然后打开：
+默认访问地址：
 
 ```text
 http://localhost:5177/
 ```
 
-接口检查：
+可选环境变量：
 
-```bash
-curl http://localhost:5177/api/config
+| 变量 | 说明 |
+| --- | --- |
+| `STEPFUN_PROVIDER` | 服务商名称，默认 `StepFun` |
+| `STEPFUN_MODEL` | 模型名称，默认 `step-3.7-flash` |
+| `STEPFUN_BASE_URL` | 模型服务地址，默认 `https://api.stepfun.com/v1` |
+| `STEPFUN_API_KEY` | 托管演示版使用的服务端 API Key；不要提交到仓库 |
+| `STEPFUN_REASONING_EFFORT` | 推理强度，默认 `medium` |
+| `PORT` | 本地端口，默认 `5177` |
+
+部署到 Vercel 时，可以只配置非密钥默认项；如果要提供“打开即用”的托管演示版，再在 Vercel 项目环境变量中配置 `STEPFUN_API_KEY`。
+
+## 项目结构
+
+```text
+api/                         Vercel serverless API
+lib/                         生成、渲染、模型请求和流式同步逻辑
+public/                      前端页面、样式和预览交互
+upstream-guizang-ppt-skill/  原项目当前主分支快照
+NOTICE.md                    来源与致谢说明
+LICENSE                      AGPL-3.0 许可证
 ```
 
-## 关键文件
+## 开源协议
 
-- `public/index.html`：页面结构、中文标题、开源致谢、左侧控制台和右侧四宫格
-- `public/styles.css`：潮牌/控制台方向的视觉样式
-- `public/app.js`：前端状态、流式生成、四宫格预览、打开和下载逻辑
-- `server.mjs`：本地 Node 服务
-- `api/config.mjs`：Vercel 配置接口
-- `api/generate-stream.mjs`：Vercel 流式生成接口
-- `lib/llm.mjs`：模型请求、提示词、多样化种子、超时和重试
-- `lib/streamRunner.mjs`：四路并行生成、逐页同步预览、HTML 流式回传
-- `lib/deckRenderer.mjs`：A/B/C/D 四种 deck 渲染模板和主题差异
-- `upstream-guizang-ppt-skill/`：歸藏老师 PPT Skill 的本地来源副本
+本项目以 AGPL-3.0-only 开源。由于本项目基于 AGPL-3.0 的原项目构建，任何公开部署或再分发都应保留原作者署名、原项目链接、许可证说明，并提供对应源码。
 
-## 聊天记录里恢复出的产品要求
-
-- 不是“一份内容方案 + 四套皮肤”，而是 A/B/C/D 四路独立请求模型。
-- A/B/C/D 的提示词需要有不同内容视角和差异化种子。
-- A：高端商务版，瑞士风，克莱因蓝，产业拐点/资本配置/决策窗口。
-- B：产品展示版，杂志风，墨水经典，用户场景/发布会节奏/展示卖点。
-- C：内部汇报版，瑞士风，柠檬绿，里程碑/风险依赖/内部决策。
-- D：叙事演讲版，杂志风，牛皮纸，人物/冲突/转折/演讲记忆点。
-- 界面左上角叫“饱和式 PPT 生成器”。
-- 页面必须声明基于歸藏老师开源的 PPT Skill 构建，并带原仓库链接。
-- 电脑端布局为左侧输入和选择项，右侧固定四宫格，点击后四份 PPT 并行跑。
-- 模型输出到哪一页，页面就同步展示到哪一页，不能退回“只显示第一页或最终结果”的模式。
-- 单次模型请求有超时和补跑机制。
-- 线上托管版可以用站长配置的默认模型；开源/自部署版不带密钥，使用者需要填写自己的兼容接口 Base URL 和 API Key。
-
-## 部署提示
-
-已存在 Vercel 绑定信息，后续若要重新发布，可在项目根目录使用 Vercel CLI：
-
-```bash
-npx vercel
-npx vercel --prod
-```
-
-部署托管演示版时，可以在 Vercel 项目环境变量里配置：
-
-- `STEPFUN_PROVIDER`
-- `STEPFUN_MODEL`
-- `STEPFUN_BASE_URL`
-- `STEPFUN_API_KEY`
-- `STEPFUN_REASONING_EFFORT`
-
-如果不配置 `STEPFUN_API_KEY`，页面会进入开源/自部署模式，要求使用者填写自己的模型名称、Base URL 和 API Key。
-
-不要把 `.env`、`.vercel`、`node_modules`、`generated` 提交到公开仓库。
+本项目按现状提供，不提供任何明示或暗示担保。使用者需要自行承担模型调用成本、部署安全和 API Key 管理责任。

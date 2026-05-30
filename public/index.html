@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>饱和式 PPT 生成器</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800;900&family=Noto+Sans+SC:wght@500;700;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/styles.css" />
+</head>
+<body data-theme="dark">
+  <main class="shell">
+    <aside class="control-rail" aria-label="生成控制区">
+      <header class="brand-block">
+        <div class="brand-line">
+          <span class="brand-mark">4X</span>
+          <span>阶跃开放平台 // 基于歸藏 PPT Skill</span>
+        </div>
+        <h1>饱和式<br />PPT<br />生成器</h1>
+        <p class="source-note">
+          本工具基于歸藏老师开源的 PPT Skill 构建，特别感谢歸藏老师和开源社区。
+          <a href="https://github.com/op7418/guizang-ppt-skill" target="_blank" rel="noreferrer">原项目</a>
+          <a href="https://github.com/woniuniuniu/four-up-ppt-generator" target="_blank" rel="noreferrer">本项目源码</a>
+          <a href="https://www.gnu.org/licenses/agpl-3.0.html" target="_blank" rel="noreferrer">AGPL-3.0</a>
+        </p>
+      </header>
+
+      <button class="ghost-button" id="configToggle" type="button">模型配置</button>
+
+      <section class="config-panel" id="configPanel" hidden>
+        <div class="config-grid">
+          <label>
+            <span>服务商</span>
+            <input id="provider" autocomplete="off" />
+          </label>
+          <label>
+            <span>模型</span>
+            <input id="model" autocomplete="off" />
+          </label>
+          <label>
+            <span>Base URL</span>
+            <input id="baseUrl" autocomplete="off" placeholder="https://api.stepfun.com/v1" />
+          </label>
+          <label>
+            <span>推理强度</span>
+            <select id="reasoningEffort">
+              <option value="medium">medium</option>
+              <option value="low">low</option>
+              <option value="high">high</option>
+              <option value="">关闭</option>
+            </select>
+          </label>
+          <label class="wide">
+            <span>API Key</span>
+            <input id="apiKey" type="password" autocomplete="new-password" placeholder="填写你自己的 API Key" />
+          </label>
+        </div>
+        <p class="config-help" id="configHelp">开源/自部署版本需要填写自己的模型名称、Base URL 和 API Key。</p>
+      </section>
+
+      <section class="composer" aria-label="PPT 想法输入">
+        <form id="generateForm">
+          <p class="section-label">输入源</p>
+          <label for="idea">
+            <span>项目标题</span>
+          </label>
+          <textarea id="idea" name="idea" rows="3" placeholder="做一份介绍 Step 3.7 Flash 的产品">做一份介绍 Step 3.7 Flash 的产品</textarea>
+
+          <div class="option-stack" aria-label="生成策略">
+            <div class="option-row">
+              <span>模板组合</span>
+              <strong>A/C 瑞士核心 · B/D 电子杂志</strong>
+            </div>
+            <div class="option-row">
+              <span>色彩策略</span>
+              <strong>四版本独立色调</strong>
+            </div>
+            <div class="option-row">
+              <span>并发批次</span>
+              <strong>4 份同时生成</strong>
+            </div>
+          </div>
+
+          <button class="primary-button" id="generateButton" type="submit">执行 4X</button>
+        </form>
+      </section>
+
+      <p class="rail-footer">开源精神 · 致谢原作者 · 本地想法即时生成</p>
+    </aside>
+
+    <section class="workbench" aria-label="四宫格 PPT 生成工作区">
+      <header class="system-strip">
+        <div>
+          <span>系统状态</span>
+          <strong>稳定</strong>
+        </div>
+        <div>
+          <span>批次上限</span>
+          <strong>4 份</strong>
+        </div>
+        <div class="support-cell">
+          <strong>默认以 Step 3.7 Flash 作为基座模型</strong>
+          <button class="theme-toggle" id="themeToggle" type="button" aria-pressed="false">白色主题</button>
+        </div>
+      </header>
+
+      <section class="board" id="board" aria-live="polite"></section>
+    </section>
+  </main>
+
+  <template id="cardTemplate">
+    <article class="deck-card">
+      <div class="card-head">
+        <div>
+          <p class="code"></p>
+          <h2></h2>
+        </div>
+        <span class="status">等待</span>
+      </div>
+      <div class="preview">
+        <div class="waiting">
+          <span></span>
+          <strong>准备</strong>
+        </div>
+        <div class="preview-nav" hidden>
+          <button type="button" data-dir="-1" aria-label="上一页">‹</button>
+          <b>1 / 6</b>
+          <button type="button" data-dir="1" aria-label="下一页">›</button>
+        </div>
+      </div>
+      <div class="meter"><i></i></div>
+      <div class="card-foot">
+        <p></p>
+        <div class="actions">
+          <a class="open-link" target="_blank" rel="noreferrer" hidden>打开</a>
+          <a class="download-link" download hidden>下载</a>
+        </div>
+      </div>
+    </article>
+  </template>
+
+  <script src="/app.js" type="module"></script>
+</body>
+</html>

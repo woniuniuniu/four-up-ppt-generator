@@ -1,0 +1,17 @@
+{
+  "name": "four-up-ppt-generator",
+  "version": "0.1.0",
+  "license": "AGPL-3.0-only",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/woniuniuniu/four-up-ppt-generator.git"
+  },
+  "type": "module",
+  "scripts": {
+    "dev": "node server.mjs",
+    "start": "node server.mjs"
+  },
+  "dependencies": {
+    "jsonrepair": "^3.14.0"
+  }
+}

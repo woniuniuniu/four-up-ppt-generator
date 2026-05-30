@@ -1,0 +1,8 @@
+{
+  "version": 2,
+  "functions": {
+    "api/generate-stream.mjs": {
+      "maxDuration": 300
+    }
+  }
+}

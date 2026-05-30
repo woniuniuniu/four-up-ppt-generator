@@ -80,7 +80,7 @@ body[data-theme="light"] .shell {
   min-height: 0;
   border-right: 1px solid var(--line);
   background: rgba(5, 5, 5, 0.72);
-  padding: 22px 22px 142px;
+  padding: 22px 22px 124px;
   position: relative;
   display: flex;
   flex-direction: column;
@@ -127,8 +127,7 @@ label span,
 .waiting strong,
 .section-label,
 .option-row span,
-.system-strip span,
-.rail-footer {
+.system-strip span {
   margin: 0;
   color: var(--muted);
   font-family: var(--display);
@@ -322,7 +321,7 @@ body[data-theme="light"] .theme-toggle:hover {
   position: absolute;
   left: 22px;
   right: 22px;
-  bottom: 48px;
+  bottom: 22px;
   width: auto;
   min-height: 76px;
   margin-top: 0;
@@ -386,17 +385,6 @@ body[data-theme="light"] .theme-toggle:hover {
   color: var(--muted);
   font-size: 11px;
   line-height: 1.45;
-}
-
-.rail-footer {
-  position: absolute;
-  left: 22px;
-  right: 22px;
-  bottom: 16px;
-  padding-top: 10px;
-  border-top: 1px solid var(--line);
-  color: var(--paper);
-  font-size: 12px;
 }
 
 .workbench {
@@ -770,11 +758,6 @@ body[data-theme="light"] .card-foot p {
     position: static;
     width: 100%;
     margin-top: 18px;
-  }
-
-  .rail-footer {
-    position: static;
-    margin-top: 0;
   }
 
   .workbench {

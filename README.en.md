@@ -7,7 +7,6 @@ Four-up PPT Generator is a Chinese-first HTML presentation generator. Give it on
 Live demo:
 
 - https://4ppt.vercel.app/
-- https://guizang-four-up-generator.vercel.app/
 
 ## Preview
 

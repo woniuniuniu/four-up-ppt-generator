@@ -7,7 +7,6 @@
 在线体验：
 
 - https://4ppt.vercel.app/
-- https://guizang-four-up-generator.vercel.app/
 
 ## 界面预览
 

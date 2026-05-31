@@ -3,7 +3,7 @@ import { createReadStream } from 'node:fs';
 import { stat } from 'node:fs/promises';
 import path from 'node:path';
 import crypto from 'node:crypto';
-import { variants } from './lib/deckRenderer.mjs';
+import { DECK_SLIDE_COUNT, variants } from './lib/deckRenderer.mjs';
 import { createStreamJob, runStreamJob, snapshotJob } from './lib/streamRunner.mjs';
 import {
   generatedDir,
@@ -22,6 +22,7 @@ const server = http.createServer(async (request, response) => {
     if (request.method === 'GET' && url.pathname === '/api/config') {
       return json(response, {
         model: publicModelConfig(),
+        slideCount: DECK_SLIDE_COUNT,
         variants: variants.map(({ id, code, title, subtitle, visualSystem, accentLabel }) => ({
           id,
           code,

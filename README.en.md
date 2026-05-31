@@ -44,6 +44,7 @@ This repository keeps the upstream link, license notice, and a snapshot of the u
 ## Features
 
 - Four parallel generations: A/B/C/D decks are generated through independent model requests instead of one shared outline with four skins.
+- Nine-slide structure: generated decks now target roughly 9 pages, including cover, signals, argument, relative chart, four-up board, workflow, trade-off, roadmap, and closing slides.
 - Live page-by-page preview: each slide appears as soon as the model stream produces it.
 - Differentiated narratives: executive strategy, product launch, internal briefing, and storytelling presentation directions.
 - HTML decks: scripts, animation, WebGL, and deck interactions are preserved.

@@ -18,6 +18,7 @@ const fields = {
 
 let variants = [];
 let serverApiKeyConfigured = false;
+let deckSlideCount = 9;
 
 applyTheme(localStorage.getItem(THEME_KEY) || 'dark');
 init();
@@ -25,6 +26,7 @@ init();
 async function init() {
   const config = await fetchJson('/api/config');
   variants = config.variants;
+  deckSlideCount = Number(config.slideCount || 9);
   serverApiKeyConfigured = Boolean(config.model?.apiKeyConfigured);
   fillConfig(config.model);
   setConfigPanelVisible(!serverApiKeyConfigured);
@@ -149,7 +151,7 @@ function renderCards(items) {
     node.dataset.state = 'idle';
     node.dataset.page = '0';
     node.dataset.autoFollow = 'true';
-    node.dataset.slideCount = '6';
+    node.dataset.slideCount = String(deckSlideCount);
     node.dataset.slot = String(index + 1).padStart(2, '0');
     node.querySelector('.code').textContent = `${item.code} / ${item.subtitle}`;
     node.querySelector('h2').textContent = item.title;
@@ -181,15 +183,15 @@ function updateJob(job) {
     const card = board.querySelector(`[data-variant="${id}"]`);
     if (!card) continue;
     card.dataset.state = item.status;
-    card.dataset.slideCount = String(item.slideCount || 6);
+    card.dataset.slideCount = String(item.slideCount || deckSlideCount);
     card.querySelector('.status').textContent = statusLabel(item.status);
     card.querySelector('.meter i').style.width = `${item.progress || 0}%`;
-    const generated = item.generatedSlides ? `${item.generatedSlides}/${item.slideCount || 6} 页 · ` : '';
+    const generated = item.generatedSlides ? `${item.generatedSlides}/${item.slideCount || deckSlideCount} 页 · ` : '';
     card.querySelector('.card-foot p').textContent = item.error || `${generated}${item.message || ''}`;
 
     const currentSlide = Number(item.currentSlide || item.generatedSlides || 0);
     if (currentSlide > 0 && card.dataset.autoFollow !== 'false') {
-      const slideCount = Number(item.slideCount || 6);
+      const slideCount = Number(item.slideCount || deckSlideCount);
       card.dataset.page = String(Math.max(0, Math.min(slideCount - 1, currentSlide - 1)));
     }
 
@@ -280,7 +282,7 @@ function showPreview(card, url, version) {
 }
 
 function navigatePreview(card, dir) {
-  const count = Number(card.dataset.slideCount || 6);
+  const count = Number(card.dataset.slideCount || deckSlideCount);
   const current = Number(card.dataset.page || 0);
   const next = Math.max(0, Math.min(count - 1, current + dir));
   card.dataset.page = String(next);
@@ -348,7 +350,7 @@ function updatePreviewLabel(card) {
   const label = card.querySelector('.preview-nav b');
   if (!label) return;
   const page = Number(card.dataset.page || 0) + 1;
-  const count = Number(card.dataset.slideCount || 6);
+  const count = Number(card.dataset.slideCount || deckSlideCount);
   label.textContent = `${page} / ${count}`;
 }
 

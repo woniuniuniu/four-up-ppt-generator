@@ -185,8 +185,18 @@ body[data-theme="light"] .source-note {
   border-bottom: 1px solid rgba(202, 255, 0, 0.48);
 }
 
+body[data-theme="light"] .source-note a {
+  color: #315500;
+  border-bottom-color: rgba(49, 85, 0, 0.42);
+}
+
 .source-note a:hover {
   border-bottom-color: var(--acid);
+}
+
+body[data-theme="light"] .source-note a:hover {
+  color: var(--black);
+  border-bottom-color: #315500;
 }
 
 .composer {

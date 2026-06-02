@@ -3,8 +3,9 @@ import { createReadStream } from 'node:fs';
 import { stat } from 'node:fs/promises';
 import path from 'node:path';
 import crypto from 'node:crypto';
-import { DECK_SLIDE_COUNT, variants } from './lib/deckRenderer.mjs';
+import { DECK_SLIDE_COUNT, renderDeck, variants } from './lib/deckRenderer.mjs';
 import { createStreamJob, runStreamJob, snapshotJob } from './lib/streamRunner.mjs';
+import { reviseDeckSlide } from './lib/llm.mjs';
 import {
   generatedDir,
   publicDir,
@@ -71,6 +72,43 @@ const server = http.createServer(async (request, response) => {
         response.end();
       }
       return;
+    }
+
+    if (request.method === 'POST' && url.pathname === '/api/revise') {
+      const payload = await readJson(request);
+      const variant = variants.find((candidate) => candidate.id === payload.variantId);
+      if (!variant) return json(response, { error: '没有找到要修改的 PPT 版本。' }, 400);
+
+      const settings = payload.settings || {};
+      try {
+        runtimeModelConfig(settings);
+      } catch (error) {
+        return json(response, { error: redactSecrets(error.message || error, settings) }, 400);
+      }
+
+      try {
+        const plan = await reviseDeckSlide({
+          idea: String(payload.idea || '').trim(),
+          variant,
+          plan: payload.plan,
+          pageNumber: payload.pageNumber,
+          instruction: payload.instruction,
+          settings,
+        });
+        return json(response, {
+          id: variant.id,
+          status: 'done',
+          message: `第 ${Number(payload.pageNumber)} 页已修改`,
+          generatedSlides: plan.slides.length,
+          slideCount: plan.slides.length,
+          currentSlide: Number(payload.pageNumber),
+          version: Date.now(),
+          plan,
+          html: renderDeck(plan, variant),
+        });
+      } catch (error) {
+        return json(response, { error: redactSecrets(error.message || error, settings) }, 500);
+      }
     }
 
     if (request.method === 'GET' && url.pathname.startsWith('/generated/')) {

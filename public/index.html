@@ -133,10 +133,34 @@
         <div class="actions">
           <a class="open-link" target="_blank" rel="noreferrer" hidden>打开</a>
           <a class="download-link" download hidden>下载</a>
+          <button class="revise-button" type="button" hidden>修改</button>
         </div>
       </div>
     </article>
   </template>
+
+  <section class="revision-modal" id="revisionDialog" hidden aria-labelledby="revisionTitle" role="dialog" aria-modal="true">
+    <div class="revision-panel">
+      <button class="revision-close" id="revisionClose" type="button" aria-label="关闭修改窗口">×</button>
+      <p class="section-label">单份修改</p>
+      <h2 id="revisionTitle">修改 PPT</h2>
+      <form id="revisionForm">
+        <label>
+          <span>页码</span>
+          <input id="revisionPage" type="number" min="1" max="9" value="1" inputmode="numeric" />
+        </label>
+        <label>
+          <span>修改要求</span>
+          <textarea id="revisionInstruction" rows="4" placeholder="例如：把第 3 页改得更适合投资人，语气更克制，减少口号感。"></textarea>
+        </label>
+        <p class="revision-help" id="revisionHelp">只重写这一份 PPT 的指定页面，其余页面会尽量保持不动。</p>
+        <div class="revision-actions">
+          <button class="ghost-button" id="revisionCancel" type="button">取消</button>
+          <button class="primary-inline" id="revisionSubmit" type="submit">开始修改</button>
+        </div>
+      </form>
+    </div>
+  </section>
 
   <script src="/app.js" type="module"></script>
 </body>

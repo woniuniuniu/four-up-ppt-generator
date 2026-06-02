@@ -285,6 +285,7 @@ body[data-theme="light"] .option-row {
 .ghost-button,
 .primary-button,
 .actions a,
+.actions button,
 .theme-toggle {
   border: 1px solid var(--line-hard);
   border-radius: 2px;
@@ -309,6 +310,7 @@ body[data-theme="light"] .option-row {
 
 .ghost-button:hover,
 .actions a:hover,
+.actions button:hover,
 .theme-toggle:hover {
   background: rgba(246, 243, 234, 0.11);
   border-color: rgba(246, 243, 234, 0.42);
@@ -316,12 +318,14 @@ body[data-theme="light"] .option-row {
 
 body[data-theme="light"] .ghost-button,
 body[data-theme="light"] .actions a,
+body[data-theme="light"] .actions button,
 body[data-theme="light"] .theme-toggle {
   background: rgba(9, 9, 9, 0.045);
 }
 
 body[data-theme="light"] .ghost-button:hover,
 body[data-theme="light"] .actions a:hover,
+body[data-theme="light"] .actions button:hover,
 body[data-theme="light"] .theme-toggle:hover {
   background: rgba(9, 9, 9, 0.09);
   border-color: rgba(9, 9, 9, 0.34);
@@ -734,8 +738,115 @@ body[data-theme="light"] .card-foot p {
   font-size: 14px;
 }
 
-.actions a[hidden] {
+.actions button {
+  min-height: 32px;
+  padding: 0 12px;
+  font-size: 14px;
+}
+
+.actions a[hidden],
+.actions button[hidden] {
   display: none;
+}
+
+.revision-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 20;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: rgba(0, 0, 0, 0.54);
+  backdrop-filter: blur(10px);
+}
+
+.revision-modal[hidden] {
+  display: none;
+}
+
+.revision-panel {
+  width: min(460px, calc(100vw - 40px));
+  border: 1px solid var(--line-hard);
+  border-radius: var(--radius);
+  background: rgba(8, 8, 8, 0.96);
+  color: var(--paper);
+  padding: 20px;
+  position: relative;
+  box-shadow: 0 28px 90px rgba(0, 0, 0, 0.36);
+}
+
+body[data-theme="light"] .revision-panel {
+  background: rgba(255, 255, 255, 0.96);
+}
+
+.revision-panel h2 {
+  margin-top: 4px;
+  font-family: var(--display);
+  font-size: 34px;
+  line-height: 0.95;
+  font-weight: 900;
+}
+
+.revision-panel form {
+  display: grid;
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.revision-panel label {
+  display: grid;
+  gap: 8px;
+}
+
+.revision-close {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 34px;
+  height: 34px;
+  border: 1px solid var(--line-hard);
+  border-radius: 2px;
+  background: transparent;
+  color: var(--paper);
+  cursor: pointer;
+  font-family: var(--display);
+  font-size: 24px;
+  font-weight: 900;
+  line-height: 1;
+}
+
+.revision-help {
+  margin: 0;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+.revision-actions {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap: 10px;
+}
+
+.revision-actions .ghost-button,
+.primary-inline {
+  min-height: 44px;
+  border-radius: 2px;
+  font-size: 16px;
+}
+
+.primary-inline {
+  border: 0;
+  background: var(--acid);
+  color: var(--black);
+  cursor: pointer;
+  font-family: var(--display);
+  font-weight: 900;
+}
+
+.primary-inline:disabled {
+  cursor: wait;
+  opacity: 0.68;
 }
 
 @keyframes pulse {

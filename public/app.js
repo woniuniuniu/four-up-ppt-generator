@@ -7,6 +7,15 @@ const configPanel = document.querySelector('#configPanel');
 const configToggle = document.querySelector('#configToggle');
 const themeToggle = document.querySelector('#themeToggle');
 const configHelp = document.querySelector('#configHelp');
+const revisionDialog = document.querySelector('#revisionDialog');
+const revisionForm = document.querySelector('#revisionForm');
+const revisionTitle = document.querySelector('#revisionTitle');
+const revisionPage = document.querySelector('#revisionPage');
+const revisionInstruction = document.querySelector('#revisionInstruction');
+const revisionHelp = document.querySelector('#revisionHelp');
+const revisionSubmit = document.querySelector('#revisionSubmit');
+const revisionClose = document.querySelector('#revisionClose');
+const revisionCancel = document.querySelector('#revisionCancel');
 const THEME_KEY = 'four-up-ppt-theme';
 const fields = {
   provider: document.querySelector('#provider'),
@@ -19,6 +28,9 @@ const fields = {
 let variants = [];
 let serverApiKeyConfigured = false;
 let deckSlideCount = 9;
+let lastIdea = '';
+let activeRevisionVariantId = '';
+const deckStateById = new Map();
 
 applyTheme(localStorage.getItem(THEME_KEY) || 'dark');
 init();
@@ -65,6 +77,7 @@ form.addEventListener('submit', async (event) => {
     return;
   }
 
+  lastIdea = prompt;
   renderCards(variants);
   button.disabled = true;
   button.textContent = '执行中';
@@ -144,6 +157,7 @@ function renderCards(items) {
     clearPreviewFrame(card);
     revokeBlobUrl(card);
   }
+  deckStateById.clear();
   board.replaceChildren();
   for (const [index, item] of items.entries()) {
     const node = template.content.firstElementChild.cloneNode(true);
@@ -161,10 +175,33 @@ function renderCards(items) {
 }
 
 board.addEventListener('click', (event) => {
+  const revise = event.target.closest('.revise-button');
+  if (revise) {
+    const card = revise.closest('.deck-card');
+    openRevisionDialog(card);
+    return;
+  }
+
   const button = event.target.closest('.preview-nav button');
   if (!button) return;
   const card = button.closest('.deck-card');
   navigatePreview(card, Number(button.dataset.dir || 0));
+});
+
+revisionClose.addEventListener('click', closeRevisionDialog);
+revisionCancel.addEventListener('click', closeRevisionDialog);
+
+revisionDialog.addEventListener('click', (event) => {
+  if (event.target === revisionDialog) closeRevisionDialog();
+});
+
+window.addEventListener('keydown', (event) => {
+  if (event.key === 'Escape' && !revisionDialog.hidden) closeRevisionDialog();
+});
+
+revisionForm.addEventListener('submit', async (event) => {
+  event.preventDefault();
+  await submitRevision();
 });
 
 function setAllCardsQueued() {
@@ -182,6 +219,7 @@ function updateJob(job) {
   for (const [id, item] of Object.entries(job.variants || {})) {
     const card = board.querySelector(`[data-variant="${id}"]`);
     if (!card) continue;
+    rememberDeckState(id, item);
     card.dataset.state = item.status;
     card.dataset.slideCount = String(item.slideCount || deckSlideCount);
     card.querySelector('.status').textContent = statusLabel(item.status);
@@ -212,6 +250,8 @@ function updateJob(job) {
       open.href = item.url;
       download.href = item.url;
       download.setAttribute('download', `${id}.html`);
+      const revise = card.querySelector('.revise-button');
+      revise.hidden = !deckStateById.get(id)?.plan;
     }
   }
 }
@@ -330,6 +370,8 @@ function setHtmlActions(card, id, html) {
   open.href = url;
   download.href = url;
   download.setAttribute('download', `${id}.html`);
+  const revise = card.querySelector('.revise-button');
+  revise.hidden = !deckStateById.get(id)?.plan;
 }
 
 function revokeBlobUrl(card) {
@@ -412,6 +454,124 @@ function setGlobalError(message) {
     const waiting = card.querySelector('.waiting strong');
     if (waiting) waiting.textContent = '错误';
   }
+}
+
+function rememberDeckState(id, item) {
+  if (!item?.plan && !item?.html) return;
+  const previous = deckStateById.get(id) || {};
+  deckStateById.set(id, {
+    ...previous,
+    plan: item.plan || previous.plan,
+    html: item.html || previous.html,
+    version: item.version || previous.version,
+  });
+}
+
+function openRevisionDialog(card) {
+  if (!card) return;
+  const variantId = card.dataset.variant;
+  const variant = variants.find((candidate) => candidate.id === variantId);
+  const state = deckStateById.get(variantId);
+  if (!state?.plan) {
+    card.querySelector('.card-foot p').textContent = '这份 PPT 还没有可修改的结构数据，请先生成完成。';
+    return;
+  }
+
+  activeRevisionVariantId = variantId;
+  revisionTitle.textContent = `修改 ${variant?.code || ''} ${variant?.title || 'PPT'}`.trim();
+  revisionPage.max = String(deckSlideCount);
+  revisionPage.value = String(Number(card.dataset.page || 0) + 1);
+  revisionInstruction.value = '';
+  revisionHelp.textContent = '只重写这一份 PPT 的指定页面，其余页面会尽量保持不动。';
+  revisionSubmit.disabled = false;
+  revisionSubmit.textContent = '开始修改';
+  revisionDialog.hidden = false;
+  window.setTimeout(() => revisionInstruction.focus(), 0);
+}
+
+function closeRevisionDialog() {
+  if (revisionSubmit.disabled) return;
+  revisionDialog.hidden = true;
+  activeRevisionVariantId = '';
+}
+
+async function submitRevision() {
+  const variantId = activeRevisionVariantId;
+  const card = board.querySelector(`[data-variant="${variantId}"]`);
+  const state = deckStateById.get(variantId);
+  if (!card || !state?.plan) return;
+
+  const pageNumber = Number(revisionPage.value);
+  const instruction = revisionInstruction.value.trim();
+  if (!Number.isInteger(pageNumber) || pageNumber < 1 || pageNumber > deckSlideCount) {
+    revisionHelp.textContent = `页码需要在 1-${deckSlideCount} 之间。`;
+    revisionPage.focus();
+    return;
+  }
+  if (!instruction) {
+    revisionHelp.textContent = '请写一下具体想怎么改。';
+    revisionInstruction.focus();
+    return;
+  }
+
+  const settings = collectSettings();
+  const settingsError = validateSettings(settings, serverApiKeyConfigured);
+  if (settingsError) {
+    revisionHelp.textContent = settingsError.message;
+    setConfigPanelVisible(true);
+    settingsError.field?.focus();
+    return;
+  }
+
+  revisionSubmit.disabled = true;
+  revisionSubmit.textContent = '修改中';
+  revisionHelp.textContent = `正在重写第 ${pageNumber} 页。`;
+  card.dataset.state = 'running';
+  card.querySelector('.status').textContent = '修改中';
+  card.querySelector('.meter i').style.width = '76%';
+  card.querySelector('.card-foot p').textContent = `正在重写第 ${pageNumber} 页`;
+
+  try {
+    const result = await fetchJson('/api/revise', {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({
+        idea: lastIdea || idea.value.trim(),
+        variantId,
+        plan: state.plan,
+        pageNumber,
+        instruction,
+        settings,
+      }),
+    });
+    applyRevisedDeck(card, variantId, result);
+    card.dataset.page = String(pageNumber - 1);
+    card.dataset.autoFollow = 'false';
+    syncPreviewPage(card);
+    revisionDialog.hidden = true;
+    activeRevisionVariantId = '';
+  } catch (error) {
+    card.dataset.state = 'error';
+    card.querySelector('.status').textContent = '错误';
+    card.querySelector('.meter i').style.width = '100%';
+    card.querySelector('.card-foot p').textContent = error.message;
+    revisionHelp.textContent = error.message;
+  } finally {
+    revisionSubmit.disabled = false;
+    revisionSubmit.textContent = '开始修改';
+  }
+}
+
+function applyRevisedDeck(card, variantId, result) {
+  rememberDeckState(variantId, result);
+  card.dataset.state = 'done';
+  card.dataset.slideCount = String(result.slideCount || deckSlideCount);
+  card.querySelector('.status').textContent = '完成';
+  card.querySelector('.meter i').style.width = '100%';
+  card.querySelector('.card-foot p').textContent = `${result.slideCount || deckSlideCount}/${result.slideCount || deckSlideCount} 页 · ${result.message || '修改完成'}`;
+  showPreviewHtml(card, result.html, result.version || Date.now());
+  setHtmlActions(card, variantId, result.html);
+  updatePreviewLabel(card);
 }
 
 function statusLabel(status) {

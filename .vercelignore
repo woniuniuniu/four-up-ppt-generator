@@ -3,3 +3,4 @@ generated
 node_modules
 vendor/guizang-ppt-skill/.git
 .DS_Store
+.playwright-cli

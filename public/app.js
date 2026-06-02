@@ -10,12 +10,17 @@ const configHelp = document.querySelector('#configHelp');
 const revisionDialog = document.querySelector('#revisionDialog');
 const revisionForm = document.querySelector('#revisionForm');
 const revisionTitle = document.querySelector('#revisionTitle');
-const revisionPage = document.querySelector('#revisionPage');
 const revisionInstruction = document.querySelector('#revisionInstruction');
 const revisionHelp = document.querySelector('#revisionHelp');
 const revisionSubmit = document.querySelector('#revisionSubmit');
 const revisionClose = document.querySelector('#revisionClose');
-const revisionCancel = document.querySelector('#revisionCancel');
+const revisionPreview = document.querySelector('#revisionPreview');
+const revisionLoading = document.querySelector('#revisionLoading');
+const revisionPreviewLabel = document.querySelector('#revisionPreviewLabel');
+const revisionPrev = document.querySelector('#revisionPrev');
+const revisionNext = document.querySelector('#revisionNext');
+const revisionOpen = document.querySelector('#revisionOpen');
+const revisionDownload = document.querySelector('#revisionDownload');
 const THEME_KEY = 'four-up-ppt-theme';
 const fields = {
   provider: document.querySelector('#provider'),
@@ -30,6 +35,8 @@ let serverApiKeyConfigured = false;
 let deckSlideCount = 9;
 let lastIdea = '';
 let activeRevisionVariantId = '';
+let revisionPageIndex = 0;
+let revisionBlobUrl = '';
 const deckStateById = new Map();
 
 applyTheme(localStorage.getItem(THEME_KEY) || 'dark');
@@ -189,7 +196,8 @@ board.addEventListener('click', (event) => {
 });
 
 revisionClose.addEventListener('click', closeRevisionDialog);
-revisionCancel.addEventListener('click', closeRevisionDialog);
+revisionPrev.addEventListener('click', () => navigateRevisionPreview(-1));
+revisionNext.addEventListener('click', () => navigateRevisionPreview(1));
 
 revisionDialog.addEventListener('click', (event) => {
   if (event.target === revisionDialog) closeRevisionDialog();
@@ -443,6 +451,13 @@ window.addEventListener('pagehide', () => {
     clearPreviewFrame(card);
     revokeBlobUrl(card);
   }
+  const revisionIframe = revisionPreview.querySelector('iframe');
+  if (revisionIframe) {
+    revisionIframe.removeAttribute('src');
+    revisionIframe.srcdoc = '';
+    revisionIframe.remove();
+  }
+  if (revisionBlobUrl) URL.revokeObjectURL(revisionBlobUrl);
 });
 
 function setGlobalError(message) {
@@ -479,13 +494,13 @@ function openRevisionDialog(card) {
 
   activeRevisionVariantId = variantId;
   revisionTitle.textContent = `修改 ${variant?.code || ''} ${variant?.title || 'PPT'}`.trim();
-  revisionPage.max = String(deckSlideCount);
-  revisionPage.value = String(Number(card.dataset.page || 0) + 1);
+  revisionPageIndex = Number(card.dataset.page || 0);
   revisionInstruction.value = '';
-  revisionHelp.textContent = '只重写这一份 PPT 的指定页面，其余页面会尽量保持不动。';
+  revisionHelp.textContent = '根据这段反馈重新生成这一份 PPT。右侧可翻页预览，生成后可继续修改。';
   revisionSubmit.disabled = false;
-  revisionSubmit.textContent = '开始修改';
+  revisionSubmit.textContent = '修改';
   revisionDialog.hidden = false;
+  showRevisionPreview(state.html, state.version || Date.now(), variantId);
   window.setTimeout(() => revisionInstruction.focus(), 0);
 }
 
@@ -493,6 +508,7 @@ function closeRevisionDialog() {
   if (revisionSubmit.disabled) return;
   revisionDialog.hidden = true;
   activeRevisionVariantId = '';
+  setRevisionLoading(false);
 }
 
 async function submitRevision() {
@@ -501,15 +517,9 @@ async function submitRevision() {
   const state = deckStateById.get(variantId);
   if (!card || !state?.plan) return;
 
-  const pageNumber = Number(revisionPage.value);
   const instruction = revisionInstruction.value.trim();
-  if (!Number.isInteger(pageNumber) || pageNumber < 1 || pageNumber > deckSlideCount) {
-    revisionHelp.textContent = `页码需要在 1-${deckSlideCount} 之间。`;
-    revisionPage.focus();
-    return;
-  }
   if (!instruction) {
-    revisionHelp.textContent = '请写一下具体想怎么改。';
+    revisionHelp.textContent = '请写一下整体想怎么改。';
     revisionInstruction.focus();
     return;
   }
@@ -525,11 +535,12 @@ async function submitRevision() {
 
   revisionSubmit.disabled = true;
   revisionSubmit.textContent = '修改中';
-  revisionHelp.textContent = `正在重写第 ${pageNumber} 页。`;
+  revisionHelp.textContent = '正在根据反馈重新生成这一份 PPT。';
+  setRevisionLoading(true);
   card.dataset.state = 'running';
   card.querySelector('.status').textContent = '修改中';
   card.querySelector('.meter i').style.width = '76%';
-  card.querySelector('.card-foot p').textContent = `正在重写第 ${pageNumber} 页`;
+  card.querySelector('.card-foot p').textContent = '正在根据反馈重写';
 
   try {
     const result = await fetchJson('/api/revise', {
@@ -539,26 +550,26 @@ async function submitRevision() {
         idea: lastIdea || idea.value.trim(),
         variantId,
         plan: state.plan,
-        pageNumber,
         instruction,
         settings,
       }),
     });
     applyRevisedDeck(card, variantId, result);
-    card.dataset.page = String(pageNumber - 1);
+    card.dataset.page = String(revisionPageIndex);
     card.dataset.autoFollow = 'false';
     syncPreviewPage(card);
-    revisionDialog.hidden = true;
-    activeRevisionVariantId = '';
+    showRevisionPreview(result.html, result.version || Date.now(), variantId);
+    revisionHelp.textContent = '已更新。可以继续输入新的修改意见，再点修改。';
   } catch (error) {
-    card.dataset.state = 'error';
-    card.querySelector('.status').textContent = '错误';
+    card.dataset.state = 'done';
+    card.querySelector('.status').textContent = '完成';
     card.querySelector('.meter i').style.width = '100%';
-    card.querySelector('.card-foot p').textContent = error.message;
-    revisionHelp.textContent = error.message;
+    card.querySelector('.card-foot p').textContent = '修改失败，原版本已保留';
+    revisionHelp.textContent = `修改失败，原版本已保留：${error.message}`;
   } finally {
+    setRevisionLoading(false);
     revisionSubmit.disabled = false;
-    revisionSubmit.textContent = '开始修改';
+    revisionSubmit.textContent = '修改';
   }
 }
 
@@ -572,6 +583,67 @@ function applyRevisedDeck(card, variantId, result) {
   showPreviewHtml(card, result.html, result.version || Date.now());
   setHtmlActions(card, variantId, result.html);
   updatePreviewLabel(card);
+}
+
+function showRevisionPreview(html, version, variantId) {
+  if (!html) return;
+  let iframe = revisionPreview.querySelector('iframe');
+  const src = `revision-preview:${version}`;
+  if (!iframe) {
+    iframe = document.createElement('iframe');
+    iframe.addEventListener('load', syncRevisionPreviewPage);
+    revisionPreview.prepend(iframe);
+  }
+  iframe.setAttribute('sandbox', 'allow-scripts allow-same-origin');
+  if (iframe.dataset.src !== src) {
+    iframe.dataset.src = src;
+    iframe.removeAttribute('src');
+    iframe.srcdoc = html;
+  }
+  iframe.title = revisionTitle.textContent;
+  setRevisionFileActions(html, variantId);
+  updateRevisionPreviewLabel();
+}
+
+function navigateRevisionPreview(dir) {
+  revisionPageIndex = Math.max(0, Math.min(deckSlideCount - 1, revisionPageIndex + dir));
+  updateRevisionPreviewLabel();
+  syncRevisionPreviewPage();
+}
+
+function updateRevisionPreviewLabel() {
+  revisionPreviewLabel.textContent = `${revisionPageIndex + 1} / ${deckSlideCount}`;
+}
+
+function syncRevisionPreviewPage() {
+  const iframe = revisionPreview.querySelector('iframe');
+  if (!iframe?.contentWindow) return;
+  try {
+    const win = iframe.contentWindow;
+    if (typeof win.go === 'function') {
+      win.go(revisionPageIndex);
+      window.setTimeout(() => {
+        if (win.__currentSlideIndex !== revisionPageIndex && typeof win.go === 'function') win.go(revisionPageIndex);
+      }, 760);
+      return;
+    }
+    syncStaticPreviewPage(iframe, revisionPageIndex);
+  } catch {
+    // Revision preview navigation is best-effort while the iframe is hot-reloading.
+  }
+}
+
+function setRevisionLoading(isLoading) {
+  revisionLoading.hidden = !isLoading;
+}
+
+function setRevisionFileActions(html, variantId) {
+  if (revisionBlobUrl) URL.revokeObjectURL(revisionBlobUrl);
+  const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
+  revisionBlobUrl = URL.createObjectURL(blob);
+  revisionOpen.href = revisionBlobUrl;
+  revisionDownload.href = revisionBlobUrl;
+  revisionDownload.setAttribute('download', `${variantId || 'deck'}.html`);
 }
 
 function statusLabel(status) {

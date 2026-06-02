@@ -765,13 +765,15 @@ body[data-theme="light"] .card-foot p {
 }
 
 .revision-panel {
-  width: min(460px, calc(100vw - 40px));
+  width: min(980px, calc(100vw - 40px));
+  max-height: calc(100vh - 48px);
   border: 1px solid var(--line-hard);
   border-radius: var(--radius);
   background: rgba(8, 8, 8, 0.96);
   color: var(--paper);
   padding: 20px;
   position: relative;
+  overflow: auto;
   box-shadow: 0 28px 90px rgba(0, 0, 0, 0.36);
 }
 
@@ -787,15 +789,33 @@ body[data-theme="light"] .revision-panel {
   font-weight: 900;
 }
 
-.revision-panel form {
+.revision-layout {
   display: grid;
-  gap: 12px;
+  grid-template-columns: minmax(260px, 0.9fr) minmax(360px, 1.1fr);
+  gap: 18px;
+  align-items: stretch;
   margin-top: 18px;
 }
 
 .revision-panel label {
   display: grid;
   gap: 8px;
+}
+
+.revision-editor {
+  min-width: 0;
+  display: grid;
+  grid-template-rows: 1fr auto auto;
+  gap: 12px;
+}
+
+.revision-editor label {
+  min-height: 0;
+}
+
+.revision-editor textarea {
+  min-height: 360px;
+  height: 100%;
 }
 
 .revision-close {
@@ -822,13 +842,6 @@ body[data-theme="light"] .revision-panel {
   line-height: 1.45;
 }
 
-.revision-actions {
-  display: grid;
-  grid-template-columns: 1fr 1.2fr;
-  gap: 10px;
-}
-
-.revision-actions .ghost-button,
 .primary-inline {
   min-height: 44px;
   border-radius: 2px;
@@ -847,6 +860,130 @@ body[data-theme="light"] .revision-panel {
 .primary-inline:disabled {
   cursor: wait;
   opacity: 0.68;
+}
+
+.revision-preview-pane {
+  min-width: 0;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  gap: 10px;
+}
+
+.revision-preview-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+}
+
+.revision-preview-head span {
+  color: var(--muted);
+  font-family: var(--display);
+  font-size: 14px;
+  font-weight: 900;
+}
+
+.revision-file-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.revision-file-actions a {
+  min-height: 30px;
+  border: 1px solid var(--line-hard);
+  border-radius: 2px;
+  color: var(--paper);
+  background: rgba(246, 243, 234, 0.055);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 10px;
+  font-family: var(--display);
+  font-size: 13px;
+  font-weight: 900;
+  text-decoration: none;
+}
+
+body[data-theme="light"] .revision-file-actions a {
+  background: rgba(9, 9, 9, 0.045);
+}
+
+.revision-preview {
+  min-height: 360px;
+  border: 1px dashed rgba(246, 243, 234, 0.2);
+  background: rgba(0, 0, 0, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+body[data-theme="light"] .revision-preview {
+  border-color: rgba(9, 9, 9, 0.16);
+  background: rgba(255, 255, 255, 0.62);
+}
+
+.revision-preview iframe {
+  width: 400%;
+  height: 400%;
+  border: 0;
+  transform: scale(0.25);
+  transform-origin: top left;
+  pointer-events: none;
+  background: #fafaf8;
+  display: block;
+}
+
+.revision-loading {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 14px;
+  background: rgba(5, 5, 5, 0.7);
+  color: var(--paper);
+  font-family: var(--display);
+  font-size: 20px;
+  font-weight: 900;
+}
+
+body[data-theme="light"] .revision-loading {
+  background: rgba(255, 255, 255, 0.76);
+  color: var(--paper);
+}
+
+.revision-loading[hidden] {
+  display: none;
+}
+
+.revision-loading span {
+  width: 74px;
+  height: 5px;
+  background: var(--acid);
+  animation: pulse 900ms ease-in-out infinite alternate;
+}
+
+.revision-preview-nav {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.revision-preview-nav button {
+  min-height: 38px;
+  border: 1px solid var(--line-hard);
+  border-radius: 2px;
+  background: rgba(246, 243, 234, 0.055);
+  color: var(--paper);
+  cursor: pointer;
+  font-size: 28px;
+  line-height: 1;
+}
+
+body[data-theme="light"] .revision-preview-nav button {
+  background: rgba(9, 9, 9, 0.045);
 }
 
 @keyframes pulse {
@@ -883,6 +1020,15 @@ body[data-theme="light"] .revision-panel {
 
   .workbench {
     min-height: 760px;
+  }
+
+  .revision-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .revision-editor textarea,
+  .revision-preview {
+    min-height: 300px;
   }
 }
 

@@ -1,5 +1,5 @@
 import { renderDeck, variants } from '../lib/deckRenderer.mjs';
-import { reviseDeckSlide } from '../lib/llm.mjs';
+import { reviseDeckPlan } from '../lib/llm.mjs';
 import { redactSecrets, runtimeModelConfig } from '../lib/config.mjs';
 
 export const config = {
@@ -28,21 +28,20 @@ export default async function handler(request, response) {
   }
 
   try {
-    const plan = await reviseDeckSlide({
+    const plan = await reviseDeckPlan({
       idea: String(payload.idea || '').trim(),
       variant,
       plan: payload.plan,
-      pageNumber: payload.pageNumber,
       instruction: payload.instruction,
       settings,
     });
     response.status(200).json({
       id: variant.id,
       status: 'done',
-      message: `第 ${Number(payload.pageNumber)} 页已修改`,
+      message: '修改完成',
       generatedSlides: plan.slides.length,
       slideCount: plan.slides.length,
-      currentSlide: Number(payload.pageNumber),
+      currentSlide: 1,
       version: Date.now(),
       plan,
       html: renderDeck(plan, variant),

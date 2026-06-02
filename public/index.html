@@ -144,20 +144,34 @@
       <button class="revision-close" id="revisionClose" type="button" aria-label="关闭修改窗口">×</button>
       <p class="section-label">单份修改</p>
       <h2 id="revisionTitle">修改 PPT</h2>
-      <form id="revisionForm">
-        <label>
-          <span>页码</span>
-          <input id="revisionPage" type="number" min="1" max="9" value="1" inputmode="numeric" />
-        </label>
-        <label>
-          <span>修改要求</span>
-          <textarea id="revisionInstruction" rows="4" placeholder="例如：把第 3 页改得更适合投资人，语气更克制，减少口号感。"></textarea>
-        </label>
-        <p class="revision-help" id="revisionHelp">只重写这一份 PPT 的指定页面，其余页面会尽量保持不动。</p>
-        <div class="revision-actions">
-          <button class="ghost-button" id="revisionCancel" type="button">取消</button>
-          <button class="primary-inline" id="revisionSubmit" type="submit">开始修改</button>
+      <form id="revisionForm" class="revision-layout">
+        <div class="revision-editor">
+          <label>
+            <span>整体修改意见</span>
+            <textarea id="revisionInstruction" rows="10" placeholder="例如：整体再高级一点，少一点营销口号；第一页更像发布会开场，第 4 页图表不要像假数据，第 8 页路线图要更明确。"></textarea>
+          </label>
+          <p class="revision-help" id="revisionHelp">根据这段反馈重新生成这一份 PPT。右侧可翻页预览，生成后可继续修改。</p>
+          <button class="primary-inline" id="revisionSubmit" type="submit">修改</button>
         </div>
+        <aside class="revision-preview-pane">
+          <div class="revision-preview-head">
+            <span id="revisionPreviewLabel">1 / 9</span>
+            <div class="revision-file-actions">
+              <a id="revisionOpen" target="_blank" rel="noreferrer">点击打开</a>
+              <a id="revisionDownload" download>点击下载</a>
+            </div>
+          </div>
+          <div class="revision-preview" id="revisionPreview">
+            <div class="revision-loading" id="revisionLoading" hidden>
+              <span></span>
+              <strong>修改中</strong>
+            </div>
+          </div>
+          <div class="revision-preview-nav">
+            <button id="revisionPrev" type="button" aria-label="上一页">‹</button>
+            <button id="revisionNext" type="button" aria-label="下一页">›</button>
+          </div>
+        </aside>
       </form>
     </div>
   </section>

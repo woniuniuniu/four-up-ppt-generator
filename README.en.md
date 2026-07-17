@@ -92,7 +92,7 @@ Optional environment variables:
 
 | Variable | Description |
 | --- | --- |
-| `BAILING_PROVIDER` | Provider name, defaults to `百灵` |
+| `BAILING_PROVIDER` | Provider name, defaults to `百灵大模型` |
 | `BAILING_MODEL` | Model name, defaults to `Ling-3.0-flash-260716` |
 | `BAILING_BASE_URL` | Model server URL, defaults to `https://api.ant-ling.com/v1` |
 | `BAILING_API_KEY` | Server-side API key for hosted demos; do not commit it |

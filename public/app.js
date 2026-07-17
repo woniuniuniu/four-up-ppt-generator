@@ -102,8 +102,8 @@ form.addEventListener('submit', async (event) => {
 });
 
 function fillConfig(model) {
-  fields.provider.value = model.provider || '百灵';
-  fields.model.value = model.model || 'Ling-3.0-flash-260716';
+  fields.provider.value = model.provider || '百灵大模型';
+  fields.model.value = model.model || '';
   fields.baseUrl.value = model.baseUrl || 'https://api.ant-ling.com/v1';
   fields.reasoningEffort.value = model.reasoningEffort || '';
   fields.apiKey.value = '';

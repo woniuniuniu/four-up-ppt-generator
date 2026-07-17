@@ -92,7 +92,7 @@ http://localhost:5177/
 
 | 变量 | 说明 |
 | --- | --- |
-| `BAILING_PROVIDER` | 服务商名称，默认 `百灵` |
+| `BAILING_PROVIDER` | 服务商名称，默认 `百灵大模型` |
 | `BAILING_MODEL` | 模型名称，默认 `Ling-3.0-flash-260716` |
 | `BAILING_BASE_URL` | 模型服务地址，默认 `https://api.ant-ling.com/v1` |
 | `BAILING_API_KEY` | 托管演示版使用的服务端 API Key；不要提交到仓库 |

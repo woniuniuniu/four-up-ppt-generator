@@ -54,7 +54,7 @@
 
 ## 模型配置
 
-默认目标模型是 Step 3.7 Flash，并按 OpenAI-compatible `chat/completions` 风格调用。项目主要围绕阶跃星辰接口做适配；其他兼容接口理论上可以尝试，但不作为强保证。
+默认目标模型是百灵 `Ling-3.0-flash-260716`，并通过 `https://api.ant-ling.com/v1` 的 OpenAI-compatible `chat/completions` 接口调用。其他兼容接口理论上可以尝试，但不作为强保证。
 
 两种使用方式：
 
@@ -92,14 +92,14 @@ http://localhost:5177/
 
 | 变量 | 说明 |
 | --- | --- |
-| `STEPFUN_PROVIDER` | 服务商名称，默认 `StepFun` |
-| `STEPFUN_MODEL` | 模型名称，默认 `step-3.7-flash` |
-| `STEPFUN_BASE_URL` | 模型服务地址，默认 `https://api.stepfun.com/v1` |
-| `STEPFUN_API_KEY` | 托管演示版使用的服务端 API Key；不要提交到仓库 |
-| `STEPFUN_REASONING_EFFORT` | 推理强度，默认 `medium` |
+| `BAILING_PROVIDER` | 服务商名称，默认 `百灵` |
+| `BAILING_MODEL` | 模型名称，默认 `Ling-3.0-flash-260716` |
+| `BAILING_BASE_URL` | 模型服务地址，默认 `https://api.ant-ling.com/v1` |
+| `BAILING_API_KEY` | 托管演示版使用的服务端 API Key；不要提交到仓库 |
+| `BAILING_REASONING_EFFORT` | 可选的推理强度，默认关闭 |
 | `PORT` | 本地端口，默认 `5177` |
 
-部署到 Vercel 时，可以只配置非密钥默认项；如果要提供“打开即用”的托管演示版，再在 Vercel 项目环境变量中配置 `STEPFUN_API_KEY`。
+部署到 Vercel 时，可以只配置非密钥默认项；如果要提供“打开即用”的托管演示版，再在 Vercel 项目环境变量中配置 `BAILING_API_KEY`。
 
 ## 项目结构
 

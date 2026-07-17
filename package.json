@@ -16,7 +16,8 @@
     "presentation",
     "html-presentation",
     "ai",
-    "stepfun"
+    "bailing",
+    "ling"
   ],
   "engines": {
     "node": ">=18"

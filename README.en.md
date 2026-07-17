@@ -54,7 +54,7 @@ This repository keeps the upstream link, license notice, and a snapshot of the u
 
 ## Model Configuration
 
-The default target model is Step 3.7 Flash, called through an OpenAI-compatible `chat/completions` interface. The project is mainly adapted for StepFun; other compatible providers may work, but are best-effort.
+The default target model is Bailing `Ling-3.0-flash-260716`, called through the OpenAI-compatible `chat/completions` endpoint at `https://api.ant-ling.com/v1`. Other compatible providers may work, but are best-effort.
 
 Two usage modes are supported:
 
@@ -92,14 +92,14 @@ Optional environment variables:
 
 | Variable | Description |
 | --- | --- |
-| `STEPFUN_PROVIDER` | Provider name, defaults to `StepFun` |
-| `STEPFUN_MODEL` | Model name, defaults to `step-3.7-flash` |
-| `STEPFUN_BASE_URL` | Model server URL, defaults to `https://api.stepfun.com/v1` |
-| `STEPFUN_API_KEY` | Server-side API key for hosted demos; do not commit it |
-| `STEPFUN_REASONING_EFFORT` | Reasoning effort, defaults to `medium` |
+| `BAILING_PROVIDER` | Provider name, defaults to `百灵` |
+| `BAILING_MODEL` | Model name, defaults to `Ling-3.0-flash-260716` |
+| `BAILING_BASE_URL` | Model server URL, defaults to `https://api.ant-ling.com/v1` |
+| `BAILING_API_KEY` | Server-side API key for hosted demos; do not commit it |
+| `BAILING_REASONING_EFFORT` | Optional reasoning effort, disabled by default |
 | `PORT` | Local port, defaults to `5177` |
 
-When deploying to Vercel, non-secret defaults are optional. Configure `STEPFUN_API_KEY` only if you want a hosted demo that visitors can use directly.
+When deploying to Vercel, non-secret defaults are optional. Configure `BAILING_API_KEY` only if you want a hosted demo that visitors can use directly.
 
 ## Project Structure
 

@@ -102,10 +102,10 @@ form.addEventListener('submit', async (event) => {
 });
 
 function fillConfig(model) {
-  fields.provider.value = model.provider || 'StepFun';
-  fields.model.value = model.model || 'step-3.7-flash';
-  fields.baseUrl.value = model.baseUrl || 'https://api.stepfun.com/v1';
-  fields.reasoningEffort.value = model.reasoningEffort || 'medium';
+  fields.provider.value = model.provider || '百灵';
+  fields.model.value = model.model || 'Ling-3.0-flash-260716';
+  fields.baseUrl.value = model.baseUrl || 'https://api.ant-ling.com/v1';
+  fields.reasoningEffort.value = model.reasoningEffort || '';
   fields.apiKey.value = '';
   fields.apiKey.placeholder = model.apiKeyConfigured ? '留空使用托管版默认模型' : '填写你自己的 API Key（不会保存）';
   if (configHelp) {

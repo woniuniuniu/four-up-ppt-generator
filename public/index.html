@@ -4,6 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>饱和式 PPT 生成器</title>
+  <link rel="icon" href="data:," />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800;900&family=Noto+Sans+SC:wght@500;700;900&display=swap" rel="stylesheet" />
@@ -15,7 +16,7 @@
       <header class="brand-block">
         <div class="brand-line">
           <span class="brand-mark">4X</span>
-          <span>阶跃开放平台 // 基于歸藏 PPT Skill</span>
+          <span>百灵 // 基于歸藏 PPT Skill</span>
         </div>
         <h1>饱和式<br />PPT<br />生成器</h1>
         <p class="source-note">
@@ -40,15 +41,15 @@
           </label>
           <label>
             <span>Base URL</span>
-            <input id="baseUrl" autocomplete="off" placeholder="https://api.stepfun.com/v1" />
+            <input id="baseUrl" autocomplete="off" placeholder="https://api.ant-ling.com/v1" />
           </label>
           <label>
             <span>推理强度</span>
             <select id="reasoningEffort">
+              <option value="">关闭</option>
               <option value="medium">medium</option>
               <option value="low">low</option>
               <option value="high">high</option>
-              <option value="">关闭</option>
             </select>
           </label>
           <label class="wide">
@@ -65,7 +66,7 @@
           <label for="idea">
             <span>项目标题</span>
           </label>
-          <textarea id="idea" name="idea" rows="3" placeholder="做一份介绍 Step 3.7 Flash 的产品">做一份介绍 Step 3.7 Flash 的产品</textarea>
+          <textarea id="idea" name="idea" rows="3" placeholder="做一份介绍百灵 Ling 3.0 Flash 的产品">做一份介绍百灵 Ling 3.0 Flash 的产品</textarea>
 
           <div class="option-stack" aria-label="生成策略">
             <div class="option-row">
@@ -98,7 +99,7 @@
           <strong>4 份</strong>
         </div>
         <div class="support-cell">
-          <strong>该项目由 Step 3.7 Flash 作为基座模型</strong>
+          <strong>该项目由百灵 Ling 3.0 Flash 作为基座模型</strong>
           <button class="theme-toggle" id="themeToggle" type="button" aria-pressed="false">白色主题</button>
         </div>
       </header>
